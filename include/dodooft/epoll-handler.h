@@ -69,8 +69,8 @@ public:
 	 * @param fd: smart pointer to a file descriptor handler
 	 * @param cb: callback
 	 */
-	void register_event (std::weak_ptr<fd_handler> fd,
-	    std::function<void (std::weak_ptr<fd_handler>)> cb);
+	std::shared_ptr<epoll_event> register_event (std::weak_ptr<fd_handler> fd,
+	    std::function<void (std::weak_ptr<fd_handler>, uint32_t)> cb);
 	/**
 	 * @brief Blocking epoll loop
 	 */

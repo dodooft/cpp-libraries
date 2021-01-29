@@ -43,9 +43,10 @@ public:
 	 * @brief Construct a new fd handler object
 	 *
 	 * @param fd: file descriptor
+	 * @param events: events to handle in epoll
 	 * @param tp: type of file descriptor
 	 */
-	fd_handler (int fd, type tp = FILE);
+	fd_handler (int fd, int events, type tp = FILE);
 	/**
 	 * @brief Destroy the fd handler::fd handler object
 	 */
@@ -65,6 +66,12 @@ public:
 	 */
 	int get_fd () const;
 	/**
+	 * @brief Get events asociated to an fd
+	 *
+	 * @return int: events
+	 */
+	int get_events () const;
+	/**
 	 * @brief: Set a callback function to handler
 	 *
 	 * @param cb: callback
@@ -73,6 +80,7 @@ public:
 	std::function<void (std::weak_ptr<fd_handler>, uint32_t)> callback;
 protected:
 	int fd;
+	int events;
 	type tp;
 };
 

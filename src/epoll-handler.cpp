@@ -60,13 +60,14 @@ epoll_handler::~epoll_handler ()
  *
  * @param fd: smart pointer to a file descriptor handler
  * @param cb: callback
+ * @return std::shared_ptr<epoll_event>: pointer to event
  */
-void epoll_handler::register_event (std::weak_ptr<fd_handler> fd,
-    std::function<void (std::weak_ptr<fd_handler>)> cb)
+std::shared_ptr<epoll_event> epoll_handler::register_event (std::weak_ptr<fd_handler> fd,
+    std::function<void (std::weak_ptr<fd_handler>, uint32_t)> cb)
 {
 	auto ev = std::make_shared <struct epoll_event> ();
 	auto fd_ptr = fd.lock ();
-	ev->events = EPOLLIN;
+	ev->events = fd_ptr->get_events ();
 	ev->data.fd = fd_ptr->get_fd ();
 
 	if (epoll_ctl (this->efd, EPOLL_CTL_ADD, ev->data.fd, ev.get ()) == -1)
@@ -74,7 +75,7 @@ void epoll_handler::register_event (std::weak_ptr<fd_handler> fd,
 		std::cerr << "Error registering event\n";
 		close (this->efd);
 		close (efd);
-		return;
+		return nullptr;
 	}
 
 	if (this->data.find (fd_ptr->get_fd ()) != this->data.end ())
@@ -86,6 +87,8 @@ void epoll_handler::register_event (std::weak_ptr<fd_handler> fd,
 	this->event_list.push_back (ev);
 
 	std::cout << "Event registered to epoll: " << ev->data.fd << "\n";
+
+	return ev;
 }
 
 /**
@@ -108,7 +111,7 @@ void epoll_handler::listen_loop ()
 			// Call callback
 			if (data[events[n].data.fd].expired ()) continue;
 			auto handler = data[events[n].data.fd].lock ();
-			handler->callback (handler);
+			handler->callback (handler, events[n].events);
 		}
 	}
 }

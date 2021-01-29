@@ -35,12 +35,14 @@
  * @brief Construct a new fd handler object
  *
  * @param fd: file descriptor
+ * @param events: events to handle in epoll
  * @param tp: type of file descriptor
  */
-fd_handler::fd_handler (int fd, type tp)
+fd_handler::fd_handler (int fd, int events, type tp)
 {
 	this->fd = fd;
 	this->tp = tp;
+	this->events = events;
 }
 
 /**
@@ -70,6 +72,16 @@ bool fd_handler::operator== (const fd_handler &handler) const
 int fd_handler::get_fd () const
 {
 	return this->fd;
+}
+
+/**
+ * @brief Get events asociated to an fd
+ *
+ * @return int: events
+ */
+int fd_handler::get_events () const
+{
+	return this->events;
 }
 
 /**
