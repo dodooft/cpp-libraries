@@ -69,8 +69,8 @@ public:
 	 *
 	 * @param cb: callback
 	 */
-	void set_callback (std::function<void (std::weak_ptr<fd_handler>)> cb);
-	std::function<void (std::weak_ptr<fd_handler>)> callback;
+	void set_callback (std::function<void (std::weak_ptr<fd_handler>, uint32_t)> cb);
+	std::function<void (std::weak_ptr<fd_handler>, uint32_t)> callback;
 protected:
 	int fd;
 	type tp;

@@ -77,7 +77,7 @@ int fd_handler::get_fd () const
  *
  * @param cb: callback
  */
-void fd_handler::set_callback (std::function<void (std::weak_ptr<fd_handler>)> cb)
+void fd_handler::set_callback (std::function<void (std::weak_ptr<fd_handler>, uint32_t)> cb)
 {
 	this->callback = cb;
 }
