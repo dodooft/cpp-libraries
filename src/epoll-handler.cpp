@@ -40,6 +40,7 @@
  */
 epoll_handler::epoll_handler (int max_events, int event_check)
 {
+	this->finish_flag = false;
 	this->max_events = max_events;
 	this->event_check = event_check;
 	this->events = static_cast<struct epoll_event *> (calloc (max_events, sizeof (struct epoll_event)));
@@ -113,5 +114,15 @@ void epoll_handler::listen_loop ()
 			auto handler = data[events[n].data.fd].lock ();
 			handler->callback (handler, events[n].events);
 		}
+
+		if (this->finish_flag) break;
 	}
+}
+
+/**
+ * @brief Set finish flag
+ */
+void epoll_handler::finish ()
+{
+	this->finish_flag = true;
 }

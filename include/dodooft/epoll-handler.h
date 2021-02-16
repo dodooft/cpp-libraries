@@ -45,6 +45,7 @@ class epoll_handler
 {
 private:
 	std::unordered_map <int, std::weak_ptr<fd_handler> > data;
+	bool finish_flag;
 	int efd;
 	int max_events;
 	int event_check;
@@ -74,7 +75,11 @@ public:
 	/**
 	 * @brief Blocking epoll loop
 	 */
-	void listen_loop ();
+	void listen_loop ()
+	/**
+	 * @brief Set finish flag
+	 */;
+	void finish ();
 };
 
 #endif /* EPOLL_HANDLER_H_ */
